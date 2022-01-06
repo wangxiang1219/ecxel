@@ -1,0 +1,112 @@
+import openpyxl
+
+
+class Data(object):
+    def __init__(self, file):
+        self.file = file
+        self.wb = openpyxl.load_workbook(self.file)  # 创建工作簿对象
+
+    def getAllData(self, sheet):
+        """
+        获取Excel的所有数据，第二行开始，每一行的值作为字典的值，首行作为字典的键，组成字典加到列表中，并以列表形式作为出参返回,返回如：[{'case_id': 1, 'title': '注册', 'data': "('python1', '123456', '123456')", 'expected': '{"code": 1, "msg": "成功"}', 'result': None}]
+        :param sheet: sheet页名称
+        :return: list type
+        """
+        sh = self.wb[sheet]  # 创建表单对象
+        datas = list(sh.rows)  # 读取表单中的数据
+        key = [i.value for i in datas[0]]  # 获取用例的参数键
+        cases = []
+        for i in range(1, sh.max_row):  # 遍历所有行的数据
+            value = [i.value for i in datas[i]]  # 获取用例的参数值
+            cases.append(dict(zip(key, value)))  # 组合到字典中并将数据读取到列表中
+        return cases
+
+    def getXrowData(self, sheet, row):
+        """
+        获取Excel的第row行数据（第二行开始算第一行），与首行组成字典返回，返回如：{'case_id': 1, 'title': '注册', 'data': "('python1', '123456', '123456')", 'expected': '{"code": 1, "msg": "成功"}', 'result': None}
+        :param sheet: sheet页名称
+        :param row: 行
+        :return: dict type
+        """
+        datas = self.getAllData(sheet)
+        data = datas[row - 1]
+        return data
+
+    def getXcolumnData(self, sheet, column):
+        """
+        获取Excel的第column列数据，返回如：['case_id', 1, 2, 3, 4, 5]
+        :param sheet:  sheet页名称
+        :param column: 列
+        :return:  list type
+        """
+        # 表单 某个sheet页
+        sh = self.wb[sheet]
+        # 读取表单中的数据
+        datas = list(sh.columns)
+        data = [i.value for i in datas[column-1]]
+        return data
+
+    def getXdata(self, sheet, row, column):
+        """
+        获取Excel的row行column列的数据
+        :param sheet: sheet页名称
+        :param row: 行
+        :param column: 列
+        :return:str type
+        """
+        sh = self.wb[sheet]
+        data = sh.cell(row=row, column=column).value
+        return data
+
+    def setXdata(self, sheet, row, column, value):
+        """'
+        往row行column列插入数据value
+        :param sheet: sheet页名称
+        :param row: 行
+        :param column: 列
+        :param value: 插入的数据
+        :return: None
+        """
+        sh = self.wb[sheet]
+        sh.cell(row=row, column=column, value=value)
+        self.wb.save(self.file)
+        return
+
+    def setXcolumndata(self, sheet, row, column_name, value):
+        """
+        往row行列名为column_name中插入数据value
+        :param sheet: sheet页名称
+        :param row: 行
+        :param column_name: 列名
+        :param value: 插入的数据
+        :return: None
+        """
+        sh = self.wb[sheet]
+        datas = list(sh.rows)
+        key = [i.value for i in datas[0]]
+        column = key.index(column_name) + 1  # column_name列名对应的列
+        sh.cell(row=row, column=column, value=value)
+        self.wb.save(self.file)
+        return
+
+    def append(self,sheet,data,column):
+        #column写入的列数
+        sh = self.wb[sheet]
+        for i in range(2, len(data) + 1):
+            sh.cell(i, column, data[i - 1])
+        self.wb.save(self.file)
+        return
+
+
+
+if __name__ == '__main__':
+
+    wb='以多孔金属钛片为载体的SiO_2膜的制备和表征_黄子安.xlsx'
+    ws1='制备信息.xlsx'
+    ws2='原料信息_子表.xlsx'
+    ws3='测试与分析方法_子表.xlsx'
+    ws4='陶瓷膜应用过程参数.xlsx'
+    ws5='陶瓷膜性能参数.xlsx'
+    #制备信息的写入  由于列数不对应，所以没用循环
+    res=Data(wb).getXdata('0-基本信息',1 ,2)
+    Data(ws1).setXdata('数据信息',2,2,res)
