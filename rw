@@ -21,16 +21,17 @@ class Data(object):
             cases.append(dict(zip(key, value)))  # 组合到字典中并将数据读取到列表中
         return cases
 
-    def getXrowData(self, sheet, row):
-        """
-        获取Excel的第row行数据（第二行开始算第一行），与首行组成字典返回，返回如：{'case_id': 1, 'title': '注册', 'data': "('python1', '123456', '123456')", 'expected': '{"code": 1, "msg": "成功"}', 'result': None}
-        :param sheet: sheet页名称
-        :param row: 行
-        :return: dict type
-        """
-        datas = self.getAllData(sheet)
-        data = datas[row - 1]
-        return data
+
+    # def getXrowData(self, sheet, row):
+    #     """
+    #     获取Excel的第row行数据（第二行开始算第一行），与首行组成字典返回，返回如：{'case_id': 1, 'title': '注册', 'data': "('python1', '123456', '123456')", 'expected': '{"code": 1, "msg": "成功"}', 'result': None}
+    #     :param sheet: sheet页名称
+    #     :param row: 行
+    #     :return: dict type
+    #     """
+    #     datas = self.getAllData(sheet)
+    #     data = datas[row - 1]
+    #     return data
 
     def getXcolumnData(self, sheet, column):
         """
@@ -89,13 +90,45 @@ class Data(object):
         self.wb.save(self.file)
         return
 
-    def append(self,sheet,data,column):
+    def getXrowData(self, sheet, row):
+        """
+        获取Excel的第row行的数据，返回如：['case_id', 1, 2, 3, 4, 5]
+        :param sheet:  sheet页名称
+        :param row: 行
+        :return:  list type
+        """
+        # 表单 某个sheet页
+        sh = self.wb[sheet]
+        # 读取表单中的数据
+        datas = list(sh.rows)
+        data = [i.value for i in datas[row-1]]
+        return data
+
+    def appendcolumn(self,sheet,data,column):
         #column写入的列数
         sh = self.wb[sheet]
         for i in range(2, len(data) + 1):
             sh.cell(i, column, data[i - 1])
         self.wb.save(self.file)
         return
+
+    def appendcolumn1(self,sheet,data,column):
+        #column写入的列数
+        sh = self.wb[sheet]
+        for i in range(3, len(data) + 1):
+            sh.cell(i-1, column, data[i - 1])
+        self.wb.save(self.file)
+        return
+
+
+    def appendrow(self,sheet,data,row):
+        #row写入的行数
+        sh = self.wb[sheet]
+        for i in range(1, len(data) + 1):
+            sh.cell(row, i, data[i - 1])
+        self.wb.save(self.file)
+        return
+
 
 
 
@@ -107,6 +140,163 @@ if __name__ == '__main__':
     ws3='测试与分析方法_子表.xlsx'
     ws4='陶瓷膜应用过程参数.xlsx'
     ws5='陶瓷膜性能参数.xlsx'
+
+
+
+
     #制备信息的写入  由于列数不对应，所以没用循环
     res=Data(wb).getXdata('0-基本信息',1 ,2)
     Data(ws1).setXdata('数据信息',2,2,res)
+    res=Data(wb).getXdata('0-基本信息', 2, 2)
+    Data(ws1).setXdata('数据信息', 2, 3, res)
+    Data(ws1).setXdata('数据信息', 2, 1, 1)
+    # res=Data(wb).getXrowData('0-基本信息',2)
+    # Data(ws1).appendrow('数据信息',res,2)
+    res=Data(wb).getXcolumnData('2-制备流程',1)
+    Data(ws1).appendcolumn('2',res,1)
+    res = Data(wb).getXcolumnData('2-制备流程', 2)
+    Data(ws1).appendcolumn('2', res, 2)
+    res = Data(wb).getXcolumnData('2-制备流程', 4)
+    Data(ws1).appendcolumn('2', res, 3)
+    res = Data(wb).getXcolumnData('2-制备流程', 5)
+    Data(ws1).appendcolumn('2', res, 4)
+    res = Data(wb).getXcolumnData('2-制备流程', 6)
+    Data(ws1).appendcolumn('2', res, 5)
+    res = Data(wb).getXcolumnData('2-制备流程', 7)
+    Data(ws1).appendcolumn('2', res, 6)
+    res = Data(wb).getXcolumnData('2-制备流程', 8)
+    Data(ws1).appendcolumn('2', res, 7)
+    res = Data(wb).getXcolumnData('2-制备流程', 9)
+    Data(ws1).appendcolumn('2', res, 8)
+    res = Data(wb).getXcolumnData('2-制备流程', 10)
+    Data(ws1).appendcolumn('2', res, 9)
+    res = Data(wb).getXcolumnData('2-制备流程', 11)
+    Data(ws1).appendcolumn('2', res, 10)
+    res = Data(wb).getXcolumnData('2-制备流程', 12)
+    Data(ws1).appendcolumn('2', res, 11)
+    res = Data(wb).getXcolumnData('2-制备流程', 13)
+    Data(ws1).appendcolumn('2', res, 12)
+
+#原料信息的写入
+    res = Data(wb).getXdata('0-基本信息', 1, 2)
+    Data(ws2).setXdata('数据信息', 2, 2, res)
+    res = Data(wb).getXdata('0-基本信息', 2, 2)
+    Data(ws2).setXdata('数据信息', 2, 3, res)
+    Data(ws2).setXdata('数据信息', 2, 1, 1)
+    res = Data(wb).getXcolumnData('1-原料', 1)
+    Data(ws1).appendcolumn('2', res, 1)
+    res = Data(wb).getXcolumnData('1-原料', 2)
+    Data(ws1).appendcolumn('2', res, 2)
+    res = Data(wb).getXcolumnData('1-原料', 3)
+    Data(ws1).appendcolumn('2', res, 3)
+    res = Data(wb).getXcolumnData('1-原料', 4)
+    Data(ws1).appendcolumn('2', res, 4)
+    res = Data(wb).getXcolumnData('1-原料', 5)
+    Data(ws1).appendcolumn('2', res, 5)
+    res = Data(wb).getXcolumnData('1-原料', 6)
+    Data(ws1).appendcolumn('2', res, 6)
+
+
+
+
+#测试与分析方法_子表写入
+    res = Data(wb).getXdata('0-基本信息', 1, 2)
+    Data(ws3).setXdata('数据信息', 2, 2, res)
+    res = Data(wb).getXdata('0-基本信息', 2, 2)
+    Data(ws3).setXdata('数据信息', 2, 3, res)
+    Data(ws3).setXdata('数据信息', 2, 1, 1)
+    res = Data(wb).getXcolumnData('2-制备流程', 1)
+    Data(ws1).appendcolumn('2', res, 1)
+    res = Data(wb).getXcolumnData('2-制备流程', 2)
+    Data(ws1).appendcolumn('2', res, 2)
+    res = Data(wb).getXcolumnData('2-制备流程', 4)
+    Data(ws1).appendcolumn('2', res, 3)
+    res = Data(wb).getXcolumnData('2-制备流程', 5)
+    Data(ws1).appendcolumn('2', res, 4)
+    res = Data(wb).getXcolumnData('2-制备流程', 6)
+    Data(ws1).appendcolumn('2', res, 5)
+    res = Data(wb).getXcolumnData('2-制备流程', 7)
+    Data(ws1).appendcolumn('2', res, 6)
+    res = Data(wb).getXcolumnData('2-制备流程', 8)
+    Data(ws1).appendcolumn('2', res, 7)
+    res = Data(wb).getXcolumnData('2-制备流程', 9)
+    Data(ws1).appendcolumn('2', res, 8)
+    res = Data(wb).getXcolumnData('2-制备流程', 10)
+    Data(ws1).appendcolumn('2', res, 9)
+    res = Data(wb).getXcolumnData('2-制备流程', 11)
+    Data(ws1).appendcolumn('2', res, 10)
+    res = Data(wb).getXcolumnData('2-制备流程', 12)
+    Data(ws1).appendcolumn('2', res, 11)
+    res = Data(wb).getXcolumnData('2-制备流程', 13)
+    Data(ws1).appendcolumn('2', res, 12)
+
+    #陶瓷膜性能参数
+    res = Data(wb).getXdata('0-基本信息', 1, 2)
+    Data(ws5).setXdata('数据信息', 2, 2, res)
+    res = Data(wb).getXdata('0-基本信息', 2, 2)
+    Data(ws5).setXdata('数据信息', 2, 3, res)
+    Data(ws5).setXdata('数据信息', 2, 1, 1)
+    res=Data(wb).getXcolumnData('4-膜性能参数',1)
+    Data(ws5).appendcolumn('1',res,1)
+    res = Data(wb).getXcolumnData('4-膜性能参数', 2)
+    Data(ws5).appendcolumn('1', res, 3)
+    res = Data(wb).getXcolumnData('4-膜性能参数', 3)
+    Data(ws5).appendcolumn('1', res, 2)
+    res=Data(wb).getXdata('4-膜性能参数',2,6)
+    res1 = Data(wb).getXcolumnData('4-膜性能参数', 6)
+    res2= Data(wb).getXdata('4-膜性能参数', 2, 8)
+    for i in range(2,len(res1)):
+        if res1[i]!=0:
+            Data(ws5).setXdata('2',i,2,res)
+    for i in range(2,len(res1)):
+        if res1[i]!=0:
+            Data(ws5).setXdata('2',i,5,res2)
+    for i in range(2,len(res1)):
+        if res1[i]!=0:
+            Data(ws5).setXdata('2',i,1,i-1)
+    Data(ws5).appendcolumn1('2', res1,3)
+    res = Data(wb).getXcolumnData('4-膜性能参数', 7)
+    Data(ws5).appendcolumn1('2', res, 4)
+    res = Data(wb).getXcolumnData('4-膜性能参数', 8)
+    Data(ws5).appendcolumn1('2', res, 6)
+    res = Data(wb).getXcolumnData('4-膜性能参数', 9)
+    Data(ws5).appendcolumn1('2', res, 7)
+    res = Data(wb).getXdata('4-膜性能参数', 2,11)
+    res2 = Data(wb).getXdata('4-膜性能参数', 2, 13)
+    res1= Data(wb).getXcolumnData('4-膜性能参数', 11)
+    for i in range(2,len(res1)):
+        if res1[i]!=0:
+            Data(ws5).setXdata('3',i,2,res)
+    for i in range(2,len(res1)):
+        if res1[i]!=0:
+            Data(ws5).setXdata('3',i,5,res2)
+    for i in range(2,len(res1)):
+        if res1[i]!=0:
+            Data(ws5).setXdata('3',i,1,i-1)
+    Data(ws5).appendcolumn1('3', res1, 3)
+    res = Data(wb).getXcolumnData('4-膜性能参数', 12)
+    Data(ws5).appendcolumn1('3', res, 4)
+    res = Data(wb).getXcolumnData('4-膜性能参数', 13)
+    Data(ws5).appendcolumn1('3', res, 6)
+    res = Data(wb).getXcolumnData('4-膜性能参数', 14)
+    Data(ws5).appendcolumn1('3', res, 7)
+
+    res = Data(wb).getXdata('4-膜性能参数', 2, 16)
+    res2 = Data(wb).getXdata('4-膜性能参数', 2, 18)
+    res1 = Data(wb).getXcolumnData('4-膜性能参数', 16)
+    for i in range(2,len(res1)):
+        if res1[i]!=0:
+            Data(ws5).setXdata('4',i,2,res)
+    for i in range(2,len(res1)):
+        if res1[i]!=0:
+            Data(ws5).setXdata('4',i,5,res2)
+    for i in range(2,len(res1)):
+        if res1[i]!=0:
+            Data(ws5).setXdata('4',i,1,i-1)
+    Data(ws5).appendcolumn1('4', res1, 3)
+    res = Data(wb).getXcolumnData('4-膜性能参数', 17)
+    Data(ws5).appendcolumn1('4', res, 4)
+    res = Data(wb).getXcolumnData('4-膜性能参数', 18)
+    Data(ws5).appendcolumn1('4', res, 6)
+    res = Data(wb).getXcolumnData('4-膜性能参数', 19)
+    Data(ws5).appendcolumn1('4', res, 7)
