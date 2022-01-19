@@ -104,6 +104,16 @@ class Data(object):
         data = [i.value for i in datas[row-1]]
         return data
 
+
+    def appendcolumn0(self,sheet,data,column):
+        #column写入的列数
+        sh = self.wb[sheet]
+        for i in range(1, len(data) + 1):
+            sh.cell(i, column, data[i - 1])
+        self.wb.save(self.file)
+        return
+
+
     def appendcolumn(self,sheet,data,column):
         #column写入的列数
         sh = self.wb[sheet]
@@ -150,6 +160,10 @@ if __name__ == '__main__':
     res=Data(wb).getXdata('0-基本信息', 2, 2)
     Data(ws1).setXdata('数据信息', 2, 3, res)
     Data(ws1).setXdata('数据信息', 2, 1, 1)
+    Data(ws1).setXdata('数据信息',2,6,'自产')
+    Data(ws1).setXdata('数据信息', 2, 7, '否')
+    Data(ws1).setXdata('数据信息', 2, 8, '否')
+    Data(ws1).setXdata('数据信息', 2, 9, '否')
     # res=Data(wb).getXrowData('0-基本信息',2)
     # Data(ws1).appendrow('数据信息',res,2)
     res=Data(wb).getXcolumnData('2-制备流程',1)
@@ -178,70 +192,106 @@ if __name__ == '__main__':
     Data(ws1).appendcolumn('2', res, 12)
 
 #原料信息的写入
-    res = Data(wb).getXdata('0-基本信息', 1, 2)
-    Data(ws2).setXdata('数据信息', 2, 2, res)
-    res = Data(wb).getXdata('0-基本信息', 2, 2)
-    Data(ws2).setXdata('数据信息', 2, 3, res)
-    Data(ws2).setXdata('数据信息', 2, 1, 1)
+
+    data=Data(wb).getXcolumnData('1-原料',1)
+    res1= Data(wb).getXdata('0-基本信息', 2, 2)
+    res2 = Data(wb).getXdata('0-基本信息', 2, 1)
+    for i in range(2, len(data)):
+        if data[i]!=0:
+            Data(ws2).setXdata('数据信息',i,1,i-1)
+            Data(ws2).setXdata('数据信息',i,2,res1)
+            Data(ws2).setXdata('数据信息',i,3,res2)
+            Data(ws2).setXdata('数据信息',i,6,'自产')
+            Data(ws2).setXdata('数据信息', i, 7, '否')
+            Data(ws2).setXdata('数据信息', i, 8, '否')
+            Data(ws2).setXdata('数据信息', i, 9, '否')
+            Data(ws2).setXdata('1',i,1,i-1)
+            Data(ws2).setXdata('1',i,2,2)
+
     res = Data(wb).getXcolumnData('1-原料', 1)
-    Data(ws1).appendcolumn('2', res, 1)
+    Data(ws2).appendcolumn('2', res, 1)
     res = Data(wb).getXcolumnData('1-原料', 2)
-    Data(ws1).appendcolumn('2', res, 2)
+    Data(ws2).appendcolumn('2', res, 2)
     res = Data(wb).getXcolumnData('1-原料', 3)
-    Data(ws1).appendcolumn('2', res, 3)
+    Data(ws2).appendcolumn('2', res, 3)
     res = Data(wb).getXcolumnData('1-原料', 4)
-    Data(ws1).appendcolumn('2', res, 4)
+    Data(ws2).appendcolumn('2', res, 4)
     res = Data(wb).getXcolumnData('1-原料', 5)
-    Data(ws1).appendcolumn('2', res, 5)
+    Data(ws2).appendcolumn('2', res, 5)
     res = Data(wb).getXcolumnData('1-原料', 6)
-    Data(ws1).appendcolumn('2', res, 6)
+    Data(ws2).appendcolumn('2', res, 6)
 
 
 
 
 #测试与分析方法_子表写入
-    res = Data(wb).getXdata('0-基本信息', 1, 2)
-    Data(ws3).setXdata('数据信息', 2, 2, res)
-    res = Data(wb).getXdata('0-基本信息', 2, 2)
-    Data(ws3).setXdata('数据信息', 2, 3, res)
-    Data(ws3).setXdata('数据信息', 2, 1, 1)
-    res = Data(wb).getXcolumnData('2-制备流程', 1)
-    Data(ws1).appendcolumn('2', res, 1)
-    res = Data(wb).getXcolumnData('2-制备流程', 2)
-    Data(ws1).appendcolumn('2', res, 2)
-    res = Data(wb).getXcolumnData('2-制备流程', 4)
-    Data(ws1).appendcolumn('2', res, 3)
-    res = Data(wb).getXcolumnData('2-制备流程', 5)
-    Data(ws1).appendcolumn('2', res, 4)
-    res = Data(wb).getXcolumnData('2-制备流程', 6)
-    Data(ws1).appendcolumn('2', res, 5)
-    res = Data(wb).getXcolumnData('2-制备流程', 7)
-    Data(ws1).appendcolumn('2', res, 6)
-    res = Data(wb).getXcolumnData('2-制备流程', 8)
-    Data(ws1).appendcolumn('2', res, 7)
-    res = Data(wb).getXcolumnData('2-制备流程', 9)
-    Data(ws1).appendcolumn('2', res, 8)
-    res = Data(wb).getXcolumnData('2-制备流程', 10)
-    Data(ws1).appendcolumn('2', res, 9)
-    res = Data(wb).getXcolumnData('2-制备流程', 11)
-    Data(ws1).appendcolumn('2', res, 10)
-    res = Data(wb).getXcolumnData('2-制备流程', 12)
-    Data(ws1).appendcolumn('2', res, 11)
-    res = Data(wb).getXcolumnData('2-制备流程', 13)
-    Data(ws1).appendcolumn('2', res, 12)
+
+    data = Data(wb).getXcolumnData('1-测试与分析方法', 1)
+    res1 = Data(wb).getXdata('0-基本信息', 2, 2)
+    res2 = Data(wb).getXdata('0-基本信息', 2, 1)
+    for i in range(2, len(data)):
+        if data[i] != 0:
+            Data(ws3).setXdata('数据信息', i, 1, i - 1)
+            Data(ws3).setXdata('数据信息', i, 2, res1)
+            Data(ws3).setXdata('数据信息', i, 3, res2)
+            Data(ws3).setXdata('数据信息', i, 6, '自产')
+            Data(ws3).setXdata('数据信息', i, 7, '否')
+            Data(ws3).setXdata('数据信息', i, 8, '否')
+            Data(ws3).setXdata('数据信息', i, 9, '否')
+            Data(ws3).setXdata('1', i, 1, i - 1)
+            Data(ws3).setXdata('1', i, 2, 2)
+
+    res = Data(wb).getXcolumnData('3-测试与分析方法', 1)
+    Data(ws3).appendcolumn('2', res, 1)
+    res = Data(wb).getXcolumnData('3-测试与分析方法', 2)
+    Data(ws3).appendcolumn('2', res, 2)
+    res = Data(wb).getXcolumnData('3-测试与分析方法', 4)
+    Data(ws3).appendcolumn('2', res, 3)
+    res = Data(wb).getXcolumnData('3-测试与分析方法', 5)
+    Data(ws3).appendcolumn('2', res, 4)
+    res = Data(wb).getXcolumnData('3-测试与分析方法', 6)
+    Data(ws3).appendcolumn('2', res, 5)
+    res = Data(wb).getXcolumnData('3-测试与分析方法', 7)
+    Data(ws3).appendcolumn('2', res, 6)
+    res = Data(wb).getXcolumnData('3-测试与分析方法', 8)
+    Data(ws3).appendcolumn('2', res, 7)
+    res = Data(wb).getXcolumnData('3-测试与分析方法', 9)
+    Data(ws3).appendcolumn('2', res, 8)
+    res = Data(wb).getXcolumnData('3-测试与分析方法', 10)
+    Data(ws3).appendcolumn('2', res, 9)
+    res = Data(wb).getXcolumnData('3-测试与分析方法', 11)
+    Data(ws3).appendcolumn('2', res, 10)
+    res = Data(wb).getXcolumnData('3-测试与分析方法', 12)
+    Data(ws3).appendcolumn('2', res, 11)
+    res = Data(wb).getXcolumnData('3-测试与分析方法', 13)
+    Data(ws3).appendcolumn('2', res, 12)
 
     #陶瓷膜性能参数
+    data = Data(wb).getXcolumnData('1-测试与分析方法', 1)
+    res1 = Data(wb).getXdata('0-基本信息', 2, 2)
+    res2 = Data(wb).getXdata('0-基本信息', 2, 1)
+    for i in range(2, len(data)):
+        if data[i] != 0:
+            Data(ws5).setXdata('数据信息', i, 1, i - 1)
+            Data(ws5).setXdata('数据信息', i, 2, res1)
+            Data(ws5).setXdata('数据信息', i, 3, res2)
+            Data(ws5).setXdata('数据信息', i, 6, '自产')
+            Data(ws5).setXdata('数据信息', i, 7, '否')
+            Data(ws5).setXdata('数据信息', i, 8, '否')
+            Data(ws5).setXdata('数据信息', i, 9, '否')
+            Data(ws5).setXdata('1', i, 1, i - 1)
+            Data(ws5).setXdata('1', i, 2, 2)
     res = Data(wb).getXdata('0-基本信息', 1, 2)
     Data(ws5).setXdata('数据信息', 2, 2, res)
     res = Data(wb).getXdata('0-基本信息', 2, 2)
     Data(ws5).setXdata('数据信息', 2, 3, res)
     Data(ws5).setXdata('数据信息', 2, 1, 1)
     res=Data(wb).getXcolumnData('4-膜性能参数',1)
-    Data(ws5).appendcolumn('1',res,1)
+    Data(ws5).appendcolumn1('1',res,1)
     res = Data(wb).getXcolumnData('4-膜性能参数', 2)
-    Data(ws5).appendcolumn('1', res, 3)
+    Data(ws5).appendcolumn1('1', res, 3)
     res = Data(wb).getXcolumnData('4-膜性能参数', 3)
-    Data(ws5).appendcolumn('1', res, 2)
+    Data(ws5).appendcolumn1('1', res, 2)
     res=Data(wb).getXdata('4-膜性能参数',2,6)
     res1 = Data(wb).getXcolumnData('4-膜性能参数', 6)
     res2= Data(wb).getXdata('4-膜性能参数', 2, 8)
@@ -300,3 +350,8 @@ if __name__ == '__main__':
     Data(ws5).appendcolumn1('4', res, 6)
     res = Data(wb).getXcolumnData('4-膜性能参数', 19)
     Data(ws5).appendcolumn1('4', res, 7)
+  
+
+
+
+
